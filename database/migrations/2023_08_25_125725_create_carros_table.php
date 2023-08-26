@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('carros', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('nome_veiculo');
+            $table->string('link');
+            $table->year('ano');
+            $table->string('combustivel');
+            $table->integer('portas');
+            $table->integer('quilometragem');
+            $table->string('cambio');
+            $table->string('cor');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
