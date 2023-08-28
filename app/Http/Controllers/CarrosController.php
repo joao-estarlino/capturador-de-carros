@@ -17,6 +17,11 @@ class CarrosController extends Controller
         $this->carrosRepository = $carrosRepository;
     }
 
+    /**
+     * Carrega a página inicial da listagem de carros.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $carros = $this->carrosRepository->getAll();
@@ -24,18 +29,34 @@ class CarrosController extends Controller
         return view('carros', compact('carros'));
     }
 
+    /**
+     * Remove um carro do sistema.
+     *
+     * @param  \App\Carros
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Carros $carro)
     {
         $this->carrosRepository->destroy($carro);
         
         return redirect()->route('carros.index');
     }
-    
+
+    /**
+     * Captura carros com base na requisição.
+     *
+     * @param Request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function capturarCarros(Request $request)
     {
         $url = 'https://www.questmultimarcas.com.br/estoque?termo='.$request->carros;
 
         $links = $this->capturarLinks($url);
+
+        if (empty($links)) {
+            return redirect()->back()->with(['info' => 'Nenhum veículo encontrado com esse nome']);
+        }
 
         foreach($links as $link){
             $carros[] = $this->capturarDadosDoVeiculo($link);
@@ -49,6 +70,13 @@ class CarrosController extends Controller
 
     }
 
+    /**
+     * Salva uma lista de carros.
+     *
+     * @param array
+     *
+     * @return bool
+     */
     private function salvarCarros(array $carros)
     {
         foreach ($carros as $carroData) {
@@ -61,13 +89,26 @@ class CarrosController extends Controller
        return true;
     }
 
+    /**
+     * Deleta carros fornecidos, utilizada para deletar
+     * carros salvos durante uma requisição com falhas.
+     *
+     * @param array
+     * @return void
+     */
     private function deletarCarros(array $carros)
     {
         foreach ($carros as $carro) {
             $this->carrosRepository->deletar($carro);
         }
     }
-
+    
+    /**
+     * Captura os links de uma URL especificada.
+     *
+     * @param string
+     * @return array
+     */
     private function capturarLinks(string $url){
 
         $response = Http::get($url);
@@ -80,6 +121,12 @@ class CarrosController extends Controller
         return $matches[1];
     }
 
+    /**
+     * Captura os dados de um veículo a partir de um link fornecido.
+     *
+     * @param string
+     * @return array
+     */
     private function capturarDadosDoVeiculo(string $link){
 
         $response = Http::get($link);
