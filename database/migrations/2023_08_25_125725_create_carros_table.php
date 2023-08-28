@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('nome_veiculo');
             $table->string('link');
-            $table->year('ano');
+            $table->string('ano');
             $table->string('combustivel');
             $table->integer('portas');
-            $table->integer('quilometragem');
+            $table->string('quilometragem');
             $table->string('cambio');
             $table->string('cor');
             $table->timestamps();

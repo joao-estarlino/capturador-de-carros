@@ -39,7 +39,7 @@
         }
         
         .btn-primary {
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50;
             border: none;
         }
         
@@ -55,13 +55,27 @@
           <div class="card">
             <div class="card-header">Tela de Capturar</div>
             <div class="card-body">
-              <form>
+              <form method="POST" action="{{ route('carros.capturar') }}">
+              @csrf
                 <div class="mb-3">
                   <label for="texto">Digite informações sobre o carro:</label>
-                  <input type="text" class="form-control" id="texto" placeholder="Carro">
+                  <input type="text" name="carros" class="form-control" id="texto" placeholder="Carro">
                 </div>
                 <button type="submit" class="btn btn-primary">Capturar</button>
               </form>
+
+              @if (session('success'))
+              <div class="alert alert-success">
+                  {{ session('success') }}
+              </div>
+              @endif
+
+              @if (session('error'))
+              <div class="alert alert-danger">
+                  {{ session('error') }}
+              </div>
+              @endif
+
             </div>
           </div>
         </div>
