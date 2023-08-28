@@ -46,7 +46,7 @@ class CarrosRepository
     /**
      * Deleta um carro, se ele existir.
      *
-     * @param array
+     * @param array $carros
      * @return void
      */
     public function deletar(array $carros)

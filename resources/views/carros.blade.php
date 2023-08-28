@@ -35,6 +35,9 @@
   <body>
     <div class="container">
         <h1>Lista de Carros</h1>
+        @if ($carros->isEmpty())
+            <p>Ainda não há carros salvos aqui.</p>
+        @else
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -70,6 +73,7 @@
                 @endforeach
             </tbody>
         </table>
+        @endif
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>

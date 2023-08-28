@@ -73,14 +73,14 @@ class CarrosController extends Controller
     /**
      * Salva uma lista de carros.
      *
-     * @param array
-     *
+     * @param array $carros
      * @return bool
      */
     private function salvarCarros(array $carros)
     {
         foreach ($carros as $carroData) {
             $carro = new Carros($carroData);
+            
             if(!$this->carrosRepository->salvar($carro)){
                 $this->deletarCarros($carros);
                 return false;
@@ -93,7 +93,7 @@ class CarrosController extends Controller
      * Deleta carros fornecidos, utilizada para deletar
      * carros salvos durante uma requisição com falhas.
      *
-     * @param array
+     * @param array $carros
      * @return void
      */
     private function deletarCarros(array $carros)
@@ -106,13 +106,12 @@ class CarrosController extends Controller
     /**
      * Captura os links de uma URL especificada.
      *
-     * @param string
+     * @param string $url
      * @return array
      */
     private function capturarLinks(string $url){
 
         $response = Http::get($url);
-
         $html = $response->body();
 
         $pattern = '/<div class="card card-car">\s*<a\s+href="([^"]+)"\s+title="[^"]+"/';
@@ -124,47 +123,38 @@ class CarrosController extends Controller
     /**
      * Captura os dados de um veículo a partir de um link fornecido.
      *
-     * @param string
+     * @param string $link
      * @return array
      */
     private function capturarDadosDoVeiculo(string $link){
 
         $response = Http::get($link);
-
         $html = $response->body();
 
         $pattern = '/<title>.*?(Flex|Gasolina|Diesel|Elétrico|Gasolina e Elétrico).*?(\d+)\s*portas.*?câmbio\s*(Manual|Automático)/';
-
         preg_match_all($pattern, $html, $matches);
 
-        $carro['user_id'] = Auth::id();;
+        $carro = [];
+        $carro['user_id'] = Auth::id();
         $carro['combustivel'] = $matches[1][0];
         $carro['portas'] = $matches[2][0];
         $carro['cambio'] = $matches[3][0];
         $carro['link'] = $link;
 
         $pattern = '/<\/figure>\s*<p>\s*(Azul|Branco|Cinza|Marrom|Prata|Preto|Verde|Vermelho|Várias cores)/';
-
         preg_match_all($pattern, $html, $matches);
-
         $carro['cor'] = $matches[1][0];
 
         $pattern =  '/<\/figure>\s*<p>\s*(\d+(\.\d+)?)\s*km/';
-
         preg_match_all($pattern, $html, $matches);
-
         $carro['quilometragem'] = $matches[1][0];
 
         $pattern = '/<\/figure>\s+<p>\s+(\d{4}\/\d{4})\s+<\/p>/';
-
         preg_match_all($pattern, $html, $matches);
-
         $carro['ano'] = $matches[1][0];
 
         $pattern = '/<div class="title">\s+<h2><span class="fw-normal">(.*?)<\/span> (.*?)<\/h2>/';
-
         preg_match_all($pattern, $html, $matches);
-
         $carro['nome_veiculo'] = $matches[1][0]." ".$matches[2][0];
 
         return $carro;
