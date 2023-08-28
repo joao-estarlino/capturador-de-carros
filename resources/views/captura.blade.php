@@ -46,6 +46,11 @@
         .btn-primary:hover {
             background-color: #45a049;
         }
+
+        .btn-capturar{
+          margin-bottom: 10px;
+        }
+        
     </style>
   </head>
   <body>
@@ -61,7 +66,8 @@
                   <label for="texto">Digite informações sobre o carro:</label>
                   <input type="text" name="carros" class="form-control" id="texto" placeholder="Carro">
                 </div>
-                <button type="submit" class="btn btn-primary">Capturar</button>
+                <button type="submit" class="btn btn-primary btn-capturar">Capturar</button>
+                <a href="{{ route('carros.index') }}" class="btn btn-primary">Ver Carros</a>
               </form>
 
               @if (session('success'))

@@ -16,6 +16,20 @@ class CarrosController extends Controller
     {
         $this->carrosRepository = $carrosRepository;
     }
+
+    public function index()
+    {
+        $carros = $this->carrosRepository->getAll();
+        
+        return view('carros', compact('carros'));
+    }
+
+    public function destroy(Carros $carro)
+    {
+        $this->carrosRepository->destroy($carro);
+        
+        return redirect()->route('carros.index');
+    }
     
     public function capturarCarros(Request $request)
     {

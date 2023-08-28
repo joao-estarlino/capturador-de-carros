@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class CarrosRepository
 {
+    public function getAll()
+    {
+        return Carros::all();
+    }
+
     public function salvar(Carros $carros)
     {
         $carro = Carros::where('nome_veiculo', $carros->nome_veiculo)
@@ -43,5 +48,10 @@ class CarrosRepository
         if ($carro) {
             $carro->delete();
         }
+    }
+
+    public function destroy(Carros $carro)
+    {
+        $carro->delete();
     }
 }
